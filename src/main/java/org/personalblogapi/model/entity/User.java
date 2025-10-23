@@ -29,7 +29,7 @@ public class User {
     @Column(name = "is_registered", nullable = false)
     private Boolean isRegistered;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 255)
     private String password; // Will store hashed password
 
     @Column(name = "first_name")
