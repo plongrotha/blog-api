@@ -4,9 +4,9 @@ spring:
   application:
     name: PersonalBlogAPI
   datasource:
-    url: jdbc:postgresql://localhost:5432/personalblog
+    url: jdbc:postgresql://postgres.railway.internal:5432/railway
     username: postgres
-    password: 1234
+    password: CcKSwuTMDqMkFUunXKpYGlCUVQMwVflx
   jpa:
     hibernate:
       ddl-auto: update

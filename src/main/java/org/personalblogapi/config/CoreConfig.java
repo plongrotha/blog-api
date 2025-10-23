@@ -10,13 +10,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class CoreConfig implements WebMvcConfigurer {
 
-    // Enable CORS for all endpoints
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:4200") // Angular app
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
-                .allowCredentials(true);
+                .allowedOriginPatterns("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(3600); // Cache preflight response for 1 hour
     }
 
 }
