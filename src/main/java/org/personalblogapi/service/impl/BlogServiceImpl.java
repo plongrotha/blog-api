@@ -1,10 +1,10 @@
 package org.personalblogapi.service.impl;
 
-import java.security.InvalidParameterException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.personalblogapi.dto.BlogRequest;
 import org.personalblogapi.dto.PaginationDTO;
 import org.personalblogapi.exception.NotFoundException;
 import org.personalblogapi.mapper.BlogMapper;
@@ -14,6 +14,7 @@ import org.personalblogapi.service.BlogService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -70,11 +71,27 @@ public class BlogServiceImpl implements BlogService {
         return PaginationDTO.fromPage(allBlog);
     }
 
+    @Transactional
     @Override
     public void bulk(List<Blog> blogRequests) {
         if (blogRequests != null) {
             blogRepository.saveAll(blogRequests);
         }
+    }
+
+    @Override
+    public List<Blog> getAllBlogsFromDateToDate(LocalDate from, LocalDate to) {
+        List<Blog> blogs = blogRepository.findAllBlogByCreatedAtBetween(from, to)
+                .orElseThrow(() -> new NotFoundException("No blogs found from: " + from + " to " + to));
+
+        List<Blog> filteredBlogs = blogs.stream()
+                .filter(blog -> {
+                    LocalDate createdAtDate = blog.getCreatedAt().toLocalDate();
+                    return (createdAtDate.isEqual(from) || createdAtDate.isAfter(from)) &&
+                            (createdAtDate.isEqual(to) || createdAtDate.isBefore(to));
+                })
+                .collect(Collectors.toList());
+        return filteredBlogs;
     }
 
 }

@@ -1,7 +1,5 @@
 package org.personalblogapi.mapper;
 
-import java.lang.annotation.Target;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.personalblogapi.dto.RegisterRequest;

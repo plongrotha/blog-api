@@ -1,9 +1,9 @@
 package org.personalblogapi.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import jakarta.validation.constraints.Positive;
-import org.apache.coyote.Response;
 import org.personalblogapi.dto.BlogRequest;
 import org.personalblogapi.dto.PaginationDTO;
 import org.personalblogapi.mapper.BlogMapper;
@@ -71,7 +71,7 @@ public class BlogController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<BlogResponse>>> allBlogs() {
         List<Blog> blogs = blogService.getAllBlogs();
-//        List<BlogResponse> response = blogMapper.toResponse(blogs);
+        // List<BlogResponse> response = blogMapper.toResponse(blogs);
         return ResponseUtil.ok(blogMapper.toResponse(blogs), "Retrieve all blogs successfully");
     }
 
@@ -96,6 +96,15 @@ public class BlogController {
         // Save all blogs
         blogService.bulk(blogs);
         return ResponseUtil.created("Blogs are created successfully");
+    }
+
+    @Operation(summary = "Get blogs by date range", description = "Retrieves all blogs published between the specified from and to dates (inclusive)")
+    @GetMapping("/date")
+    public ResponseEntity<ApiResponse<List<BlogResponse>>> getBlogFromTO(
+            @RequestParam LocalDate from,
+            @RequestParam LocalDate to) {
+        List<Blog> blogs = blogService.getAllBlogsFromDateToDate(from, to);
+        return ResponseUtil.ok(blogMapper.toResponse(blogs), "blogs retrieve successfully");
     }
 
 }

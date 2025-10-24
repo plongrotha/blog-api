@@ -1,5 +1,6 @@
 package org.personalblogapi.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.personalblogapi.dto.PaginationDTO;
@@ -21,4 +22,5 @@ public interface BlogService {
 
     void bulk(List<Blog> blogRequests);
 
+    List<Blog> getAllBlogsFromDateToDate(LocalDate from, LocalDate to);
 }
