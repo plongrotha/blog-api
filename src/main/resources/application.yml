@@ -1,29 +1,29 @@
-#spring:
-#  main:
-#    banner-mode: off
-#  application:
-#    name: PersonalBlogAPI
-#  datasource:
-#    url: jdbc:postgresql://postgres.railway.internal:5432/railway
-#    username: postgres
-#    password: CcKSwuTMDqMkFUunXKpYGlCUVQMwVflx
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    show-sql: true
-
-
-
 spring:
   main:
     banner-mode: off
   application:
     name: PersonalBlogAPI
   datasource:
-    url: jdbc:postgresql://localhost:5432/personalblog
+    url: jdbc:postgresql://postgres.railway.internal:5432/railway
     username: postgres
-    password: 1234
+    password: CcKSwuTMDqMkFUunXKpYGlCUVQMwVflx
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+
+
+#spring:
+#  main:
+#    banner-mode: off
+#  application:
+#    name: PersonalBlogAPI
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/personalblog
+#    username: postgres
+#    password: 1234
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
