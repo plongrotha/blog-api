@@ -74,6 +74,7 @@ public class BlogController {
         return ResponseUtil.ok("Blog deleted successfully");
     }
 
+    @Cacheable(value = "blogs")
     @Operation(summary = "Retrieve all blogs")
     @GetMapping
     public ResponseEntity<ApiResponse<List<BlogResponse>>> allBlogs() {
