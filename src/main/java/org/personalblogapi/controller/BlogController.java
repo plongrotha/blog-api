@@ -12,6 +12,9 @@ import org.personalblogapi.model.response.ApiResponse;
 import org.personalblogapi.model.response.BlogResponse;
 import org.personalblogapi.service.BlogService;
 import org.personalblogapi.utils.ResponseUtil;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +39,7 @@ public class BlogController {
 
     private final BlogService blogService;
     private final BlogMapper blogMapper;
+    private final CacheManager cacheManager;
 
     @Operation(summary = "Create a new blog", description = "This endpoint allows you to create a new blog post by providing a valid BlogRequest payload.")
     @PostMapping
@@ -53,6 +57,7 @@ public class BlogController {
         return ResponseUtil.ok(blogMapper.toResponse(updated), "Blog is updated successfully");
     }
 
+    @Cacheable(value = "blogs", key = "#id")
     @Operation(summary = "Get a blog by ID", description = "Retrieve the details of a specific blog post by providing its ID.")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<BlogResponse>> getBlogById(@PathVariable Long id) {
@@ -60,10 +65,12 @@ public class BlogController {
         return ResponseUtil.ok(blogMapper.toResponse(blog), "Blog retrieved successfully");
     }
 
+    @CacheEvict(value = {"blogs"}, allEntries = true)
     @Operation(summary = "Delete a blog by ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteBlogById(@PathVariable @Positive Long id) {
         blogService.deleteBlogById(id);
+        cacheManager.getCache("blogs").clear();
         return ResponseUtil.ok("Blog deleted successfully");
     }
 
@@ -71,7 +78,6 @@ public class BlogController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<BlogResponse>>> allBlogs() {
         List<Blog> blogs = blogService.getAllBlogs();
-        // List<BlogResponse> response = blogMapper.toResponse(blogs);
         return ResponseUtil.ok(blogMapper.toResponse(blogs), "Retrieve all blogs successfully");
     }
 
@@ -98,6 +104,7 @@ public class BlogController {
         return ResponseUtil.created("Blogs are created successfully");
     }
 
+    @Cacheable(value = "blogs")
     @Operation(summary = "Get blogs by date range", description = "Retrieves all blogs published between the specified from and to dates (inclusive)")
     @GetMapping("/date")
     public ResponseEntity<ApiResponse<List<BlogResponse>>> getBlogFromTO(
@@ -106,5 +113,4 @@ public class BlogController {
         List<Blog> blogs = blogService.getAllBlogsFromDateToDate(from, to);
         return ResponseUtil.ok(blogMapper.toResponse(blogs), "blogs retrieve successfully");
     }
-
 }
